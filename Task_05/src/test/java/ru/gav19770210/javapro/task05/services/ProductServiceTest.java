@@ -39,6 +39,8 @@ public class ProductServiceTest {
         Assertions.assertThrows(NoSuchElementException.class,
                 () -> productService.getProductById(productTest.getId()),
                 "Не сработала проверка на отсутствие продукта с заданным <id>");
+
+        Mockito.verify(productRepo).findById(productTest.getId());
     }
 
     @Test
@@ -51,6 +53,8 @@ public class ProductServiceTest {
         Assertions.assertThrows(NoSuchElementException.class,
                 () -> productService.createProduct(productTest),
                 "Не сработала проверка на отсутствие пользователя с заданным <userId>");
+
+        Mockito.verify(userRepo).findById(productTest.getUserId());
     }
 
     @Test
@@ -65,6 +69,9 @@ public class ProductServiceTest {
         Assertions.assertThrows(IllegalArgumentException.class,
                 () -> productService.createProduct(productTest),
                 "Не сработала проверка на существование продукта с заданным <accountNumber>");
+
+        Mockito.verify(userRepo).findById(productTest.getUserId());
+        Mockito.verify(productRepo).findByAccountNumber(productTest.getAccountNumber());
     }
 
     @Test
@@ -77,6 +84,8 @@ public class ProductServiceTest {
         Assertions.assertThrows(NoSuchElementException.class,
                 () -> productService.updateProduct(productTest),
                 "Не сработала проверка на отсутствие продукта с заданным <id>");
+
+        Mockito.verify(productRepo).findById(productTest.getId());
     }
 
     @Test
@@ -91,6 +100,9 @@ public class ProductServiceTest {
         Assertions.assertThrows(NoSuchElementException.class,
                 () -> productService.updateProduct(productTest),
                 "Не сработала проверка на отсутствие пользователя с заданным <userId>");
+
+        Mockito.verify(productRepo).findById(productTest.getId());
+        Mockito.verify(userRepo).findById(productTest.getUserId());
     }
 
     @Test
@@ -112,6 +124,10 @@ public class ProductServiceTest {
         Assertions.assertThrows(IllegalArgumentException.class,
                 () -> productService.updateProduct(productTest),
                 "Не сработала проверка на существование продукта с заданным <accountNumber>");
+
+        Mockito.verify(productRepo).findById(productTest.getId());
+        Mockito.verify(userRepo).findById(productTest.getUserId());
+        Mockito.verify(productRepo).findByAccountNumber(productTest.getAccountNumber());
     }
 
     @Test
@@ -124,5 +140,7 @@ public class ProductServiceTest {
         Assertions.assertThrows(NoSuchElementException.class,
                 () -> productService.deleteProductById(productTest.getId()),
                 "Не сработала проверка на отсутствие продукта с заданным <id>");
+
+        Mockito.verify(productRepo).findById(productTest.getId());
     }
 }

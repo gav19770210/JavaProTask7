@@ -32,6 +32,8 @@ public class UserServiceTest {
         Assertions.assertThrows(NoSuchElementException.class,
                 () -> userService.getUserById(userTest.getId()),
                 "Не сработала проверка на отсутствие пользователя с заданным <id>");
+
+        Mockito.verify(userRepo).findById(userTest.getId());
     }
 
     @Test
@@ -44,6 +46,8 @@ public class UserServiceTest {
         Assertions.assertThrows(NoSuchElementException.class,
                 () -> userService.getUserByName(userTest.getName()),
                 "Не сработала проверка на отсутствие пользователя с заданным <name>");
+
+        Mockito.verify(userRepo).findByName(userTest.getName());
     }
 
     @Test
@@ -56,6 +60,8 @@ public class UserServiceTest {
         Assertions.assertThrows(IllegalArgumentException.class,
                 () -> userService.createUser(userTest),
                 "Не сработала проверка на существование пользователя с заданным <name>");
+
+        Mockito.verify(userRepo).findByName(userTest.getName());
     }
 
     @Test
@@ -68,6 +74,8 @@ public class UserServiceTest {
         Assertions.assertThrows(NoSuchElementException.class,
                 () -> userService.updateUser(userTest),
                 "Не сработала проверка на отсутствие пользователя с заданным <id>");
+
+        Mockito.verify(userRepo).findById(userTest.getId());
     }
 
     @Test
@@ -86,6 +94,9 @@ public class UserServiceTest {
         Assertions.assertThrows(IllegalArgumentException.class,
                 () -> userService.updateUser(userTest),
                 "Не сработала проверка на существование пользователя с заданным <name>");
+
+        Mockito.verify(userRepo).findById(userTest.getId());
+        Mockito.verify(userRepo).findByName(userTest.getName());
     }
 
     @Test
@@ -98,5 +109,7 @@ public class UserServiceTest {
         Assertions.assertThrows(NoSuchElementException.class,
                 () -> userService.deleteUserById(userTest.getId()),
                 "Не сработала проверка на отсутствие пользователя с заданным <id>");
+
+        Mockito.verify(userRepo).findById(userTest.getId());
     }
 }
