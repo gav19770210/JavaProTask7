@@ -43,6 +43,8 @@ public class UserControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$", Matchers.hasSize(1)))
                 .andExpect(jsonPath("$[0].name", Matchers.is(userTest.getName())));
+
+        Mockito.verify(userService).getAllUsers();
     }
 
     @Test
@@ -56,6 +58,8 @@ public class UserControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("id").value(userTest.getId()))
                 .andExpect(jsonPath("name", Matchers.is(userTest.getName())));
+
+        Mockito.verify(userService).getUserById(userTest.getId());
     }
 
     @Test
@@ -70,6 +74,8 @@ public class UserControllerTest {
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNotFound())
                 .andExpect(jsonPath("message").value(errorMessage));
+
+        Mockito.verify(userService).getUserById(ArgumentMatchers.any());
     }
 
     @Test
@@ -83,6 +89,8 @@ public class UserControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("id").value(userTest.getId()))
                 .andExpect(jsonPath("name", Matchers.is(userTest.getName())));
+
+        Mockito.verify(userService).getUserByName(userTest.getName());
     }
 
     @Test
@@ -97,6 +105,8 @@ public class UserControllerTest {
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNotFound())
                 .andExpect(jsonPath("message").value(errorMessage));
+
+        Mockito.verify(userService).getUserByName(ArgumentMatchers.any());
     }
 
     @Test
@@ -110,6 +120,8 @@ public class UserControllerTest {
                         .content(objectMapper.writeValueAsString(userTest)))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("name", Matchers.is(userTest.getName())));
+
+        Mockito.verify(userService).createUser(userTest);
     }
 
     @Test
@@ -125,6 +137,8 @@ public class UserControllerTest {
                         .content(objectMapper.writeValueAsString(userTest)))
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("message").value(errorMessage));
+
+        Mockito.verify(userService).createUser(ArgumentMatchers.any());
     }
 
     @Test
@@ -138,6 +152,8 @@ public class UserControllerTest {
                         .content(objectMapper.writeValueAsString(userTest)))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("id").value(userTest.getId()));
+
+        Mockito.verify(userService).updateUser(userTest);
     }
 
     @Test
@@ -153,6 +169,8 @@ public class UserControllerTest {
                         .content(objectMapper.writeValueAsString(userTest)))
                 .andExpect(status().isNotFound())
                 .andExpect(jsonPath("message").value(errorMessage));
+
+        Mockito.verify(userService).updateUser(ArgumentMatchers.any());
     }
 
     @Test
@@ -168,6 +186,8 @@ public class UserControllerTest {
                         .content(objectMapper.writeValueAsString(userTest)))
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("message").value(errorMessage));
+
+        Mockito.verify(userService).updateUser(ArgumentMatchers.any());
     }
 
     @Test
@@ -182,5 +202,7 @@ public class UserControllerTest {
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNotFound())
                 .andExpect(jsonPath("message").value(errorMessage));
+
+        Mockito.verify(userService).deleteUserById(ArgumentMatchers.any());
     }
 }

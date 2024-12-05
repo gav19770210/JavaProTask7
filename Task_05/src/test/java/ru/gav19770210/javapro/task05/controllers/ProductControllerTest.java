@@ -48,6 +48,8 @@ public class ProductControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$", Matchers.hasSize(1)))
                 .andExpect(jsonPath("$[0].accountNumber", Matchers.is(productTest.getAccountNumber())));
+
+        Mockito.verify(productService).getAllProducts();
     }
 
     @Test
@@ -62,6 +64,8 @@ public class ProductControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$", Matchers.hasSize(1)))
                 .andExpect(jsonPath("$[0].accountNumber", Matchers.is(productTest.getAccountNumber())));
+
+        Mockito.verify(productService).getUserProducts(productTest.getUserId());
     }
 
     @Test
@@ -75,6 +79,8 @@ public class ProductControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("id").value(productTest.getId()))
                 .andExpect(jsonPath("accountNumber", Matchers.is(productTest.getAccountNumber())));
+
+        Mockito.verify(productService).getProductById(productTest.getId());
     }
 
     @Test
@@ -89,6 +95,8 @@ public class ProductControllerTest {
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNotFound())
                 .andExpect(jsonPath("message").value(errorMessage));
+
+        Mockito.verify(productService).getProductById(ArgumentMatchers.any());
     }
 
     @Test
@@ -102,6 +110,8 @@ public class ProductControllerTest {
                         .content(objectMapper.writeValueAsString(productTest)))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("accountNumber", Matchers.is(productTest.getAccountNumber())));
+
+        Mockito.verify(productService).createProduct(productTest);
     }
 
     @Test
@@ -117,6 +127,8 @@ public class ProductControllerTest {
                         .content(objectMapper.writeValueAsString(productTest)))
                 .andExpect(status().isNotFound())
                 .andExpect(jsonPath("message").value(errorMessage));
+
+        Mockito.verify(productService).createProduct(ArgumentMatchers.any());
     }
 
     @Test
@@ -132,6 +144,8 @@ public class ProductControllerTest {
                         .content(objectMapper.writeValueAsString(productTest)))
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("message").value(errorMessage));
+
+        Mockito.verify(productService).createProduct(ArgumentMatchers.any());
     }
 
     @Test
@@ -145,6 +159,8 @@ public class ProductControllerTest {
                         .content(objectMapper.writeValueAsString(productTest)))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("id").value(productTest.getId()));
+
+        Mockito.verify(productService).updateProduct(productTest);
     }
 
     @Test
@@ -160,6 +176,8 @@ public class ProductControllerTest {
                         .content(objectMapper.writeValueAsString(productTest)))
                 .andExpect(status().isNotFound())
                 .andExpect(jsonPath("message").value(errorMessage));
+
+        Mockito.verify(productService).updateProduct(ArgumentMatchers.any());
     }
 
     @Test
@@ -175,6 +193,8 @@ public class ProductControllerTest {
                         .content(objectMapper.writeValueAsString(productTest)))
                 .andExpect(status().isNotFound())
                 .andExpect(jsonPath("message").value(errorMessage));
+
+        Mockito.verify(productService).updateProduct(ArgumentMatchers.any());
     }
 
     @Test
@@ -190,6 +210,8 @@ public class ProductControllerTest {
                         .content(objectMapper.writeValueAsString(productTest)))
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("message").value(errorMessage));
+
+        Mockito.verify(productService).updateProduct(ArgumentMatchers.any());
     }
 
     @Test
@@ -204,5 +226,7 @@ public class ProductControllerTest {
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNotFound())
                 .andExpect(jsonPath("message").value(errorMessage));
+
+        Mockito.verify(productService).deleteProductById(ArgumentMatchers.any());
     }
 }
