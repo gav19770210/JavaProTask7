@@ -16,7 +16,7 @@ spring:
   flyway:
     enable: true
     validate-on-migrate: false
-    locations: db.migration
+    locations: db/migration
 
 # Server Configuration
 server:

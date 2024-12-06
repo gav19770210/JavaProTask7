@@ -1,8 +1,6 @@
 package ru.gav19770210.javapro.task05.services;
 
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -11,16 +9,56 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import ru.gav19770210.javapro.task05.entities.UserEntity;
 import ru.gav19770210.javapro.task05.repositories.UserRepo;
 
+import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 
 @ExtendWith(MockitoExtension.class)
 public class UserServiceTest {
-    private final UserEntity userTest = new UserEntity(1L, "Bob");
     @Mock
     UserRepo userRepo;
     @InjectMocks
     UserServiceImpl userService;
+    private UserEntity userTest;
+
+    @BeforeEach
+    public void beforeEach() {
+        userTest = new UserEntity(1L, "Bob");
+    }
+
+    @AfterEach
+    public void afterEach() {
+        userTest = null;
+    }
+
+    @Test
+    @DisplayName("getAllUsers. Получение списка пользователей")
+    public void getAllUsersTest() {
+        List<UserEntity> userEntities = List.of(userTest);
+
+        Mockito.when(userRepo.findAll())
+                .thenReturn(userEntities);
+
+        List<UserEntity> userEntitiesFind = userService.getAllUsers();
+
+        Assertions.assertEquals(userEntities.size(), userEntitiesFind.size());
+
+        Mockito.verify(userRepo).findAll();
+    }
+
+    @Test
+    @DisplayName("getUserById. Получение пользователя с заданным <id>")
+    public void getUserByIdTest() {
+
+        Mockito.when(userRepo.findById(userTest.getId()))
+                .thenReturn(Optional.of(userTest));
+
+        var userGet = userService.getUserById(userTest.getId());
+
+        Assertions.assertEquals(userTest, userGet);
+
+        Mockito.verify(userRepo).findById(userTest.getId());
+    }
 
     @Test
     @DisplayName("getUserById. Проверка на отсутствие пользователя с заданным <id>")
@@ -34,6 +72,20 @@ public class UserServiceTest {
                 "Не сработала проверка на отсутствие пользователя с заданным <id>");
 
         Mockito.verify(userRepo).findById(userTest.getId());
+    }
+
+    @Test
+    @DisplayName("getUserByName. Получение пользователя с заданным <name>")
+    public void getUserByNameTest() {
+
+        Mockito.when(userRepo.findByName(userTest.getName()))
+                .thenReturn(Optional.of(userTest));
+
+        var userGet = userService.getUserByName(userTest.getName());
+
+        Assertions.assertEquals(userTest, userGet);
+
+        Mockito.verify(userRepo).findByName(userTest.getName());
     }
 
     @Test

@@ -18,9 +18,11 @@ spring:
         hbm2ddl: validate
   flyway:
     enable: true
-    validate-on-migrate: false
-    locations: db.migration
+#    validate-on-migrate: false
+    locations: db/migration
+    clean-disabled: false
+
 
 # Server Configuration
 server:
-  port: 8081
+  port: 8082

@@ -2,6 +2,8 @@ package ru.gav19770210.javapro.task05.controllers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.hamcrest.Matchers;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentMatchers;
@@ -28,13 +30,25 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @WebMvcTest(ProductController.class)
 public class ProductControllerTest {
-    private final UserEntity userTest = new UserEntity(1L, "Bob");
-    private final ProductEntity productTest = new ProductEntity(1L, 1L, "40817810100000000001", BigDecimal.ZERO, ProductType.CARD);
     private final ObjectMapper objectMapper = new ObjectMapper();
+    private UserEntity userTest;
+    private ProductEntity productTest;
     @Autowired
     private MockMvc mockMvc;
     @MockBean
     private ProductService productService;
+
+    @BeforeEach
+    public void beforeEach() {
+        userTest = new UserEntity(1L, "Bob");
+        productTest = new ProductEntity(1L, 1L, "40817810100000000001", BigDecimal.ZERO, ProductType.CARD);
+    }
+
+    @AfterEach
+    public void afterEach() {
+        productTest = null;
+        userTest = null;
+    }
 
     @Test
     @DisplayName("getAllProducts. Получение списка продуктов")
@@ -59,7 +73,7 @@ public class ProductControllerTest {
 
         Mockito.when(productService.getUserProducts(productTest.getUserId())).thenReturn(productEntities);
 
-        mockMvc.perform(get("/product/" + productTest.getUserId() + "/get-by-user")
+        mockMvc.perform(get("/product/{user_id}/get-by-user", productTest.getUserId())
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$", Matchers.hasSize(1)))
@@ -74,7 +88,7 @@ public class ProductControllerTest {
 
         Mockito.when(productService.getProductById(productTest.getId())).thenReturn(productTest);
 
-        mockMvc.perform(get("/product/" + productTest.getId() + "/get")
+        mockMvc.perform(get("/product/{id}/get", productTest.getId())
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("id").value(productTest.getId()))
@@ -91,7 +105,7 @@ public class ProductControllerTest {
         Mockito.doThrow(new NoSuchElementException(errorMessage))
                 .when(productService).getProductById(ArgumentMatchers.any());
 
-        mockMvc.perform(get("/product/" + productTest.getId() + "/get")
+        mockMvc.perform(get("/product/{id}/get", productTest.getId())
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNotFound())
                 .andExpect(jsonPath("message").value(errorMessage));
@@ -222,7 +236,7 @@ public class ProductControllerTest {
         Mockito.doThrow(new NoSuchElementException(errorMessage))
                 .when(productService).deleteProductById(ArgumentMatchers.any());
 
-        mockMvc.perform(delete("/product/" + productTest.getId() + "/delete")
+        mockMvc.perform(delete("/product/{id}/delete", productTest.getId())
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNotFound())
                 .andExpect(jsonPath("message").value(errorMessage));

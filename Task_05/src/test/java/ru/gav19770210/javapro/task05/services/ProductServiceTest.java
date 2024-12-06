@@ -1,8 +1,6 @@
 package ru.gav19770210.javapro.task05.services;
 
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -15,19 +13,59 @@ import ru.gav19770210.javapro.task05.repositories.ProductRepo;
 import ru.gav19770210.javapro.task05.repositories.UserRepo;
 
 import java.math.BigDecimal;
+import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 
 @ExtendWith(MockitoExtension.class)
 public class ProductServiceTest {
-    private final UserEntity userTest = new UserEntity(1L, "Bob");
-    private final ProductEntity productTest = new ProductEntity(1L, 1L, "40817810100000000001", BigDecimal.ZERO, ProductType.CARD);
     @Mock
     UserRepo userRepo;
     @Mock
     ProductRepo productRepo;
     @InjectMocks
     ProductServiceImpl productService;
+    private UserEntity userTest;
+    private ProductEntity productTest;
+
+    @BeforeEach
+    public void beforeEach() {
+        userTest = new UserEntity(1L, "Bob");
+        productTest = new ProductEntity(1L, 1L, "40817810100000000001", BigDecimal.ZERO, ProductType.CARD);
+    }
+
+    @AfterEach
+    public void afterEach() {
+        productTest = null;
+        userTest = null;
+    }
+
+    @Test
+    @DisplayName("findAll. Получение списка продуктов")
+    public void getAllProductsTest() {
+        List<ProductEntity> productEntities = List.of(productTest);
+
+        Mockito.when(productRepo.findAll()).thenReturn(productEntities);
+
+        List<ProductEntity> productEntitiesGet = productService.getAllProducts();
+
+        Assertions.assertEquals(productEntities.size(), productEntitiesGet.size());
+
+        Mockito.verify(productRepo).findAll();
+    }
+
+    @Test
+    @DisplayName("getProductById. Получение продукта с заданным <id>")
+    public void getProductByIdTest() {
+
+        Mockito.when(productRepo.findById(productTest.getId())).thenReturn(Optional.of(productTest));
+
+        var productGet = productService.getProductById(productTest.getId());
+
+        Assertions.assertEquals(productTest, productGet);
+
+        Mockito.verify(productRepo).findById(productTest.getId());
+    }
 
     @Test
     @DisplayName("getProductById. Проверка на отсутствие продукта с заданным <id>")

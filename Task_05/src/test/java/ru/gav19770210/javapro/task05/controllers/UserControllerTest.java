@@ -2,6 +2,8 @@ package ru.gav19770210.javapro.task05.controllers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.hamcrest.Matchers;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentMatchers;
@@ -24,12 +26,22 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @WebMvcTest(UserController.class)
 public class UserControllerTest {
-    private final UserEntity userTest = new UserEntity(1L, "Bob");
     private final ObjectMapper objectMapper = new ObjectMapper();
+    private UserEntity userTest;
     @Autowired
     private MockMvc mockMvc;
     @MockBean
     private UserService userService;
+
+    @BeforeEach
+    public void beforeEach() {
+        userTest = new UserEntity(1L, "Bob");
+    }
+
+    @AfterEach
+    public void afterEach() {
+        userTest = null;
+    }
 
     @Test
     @DisplayName("getAllUsers. Получение списка пользователей")
@@ -53,7 +65,7 @@ public class UserControllerTest {
 
         Mockito.when(userService.getUserById(userTest.getId())).thenReturn(userTest);
 
-        mockMvc.perform(get("/user/" + userTest.getId() + "/get")
+        mockMvc.perform(get("/user/{id}/get", userTest.getId())
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("id").value(userTest.getId()))
@@ -70,7 +82,7 @@ public class UserControllerTest {
         Mockito.doThrow(new NoSuchElementException(errorMessage))
                 .when(userService).getUserById(ArgumentMatchers.any());
 
-        mockMvc.perform(get("/user/" + userTest.getId() + "/get")
+        mockMvc.perform(get("/user/{id}/get", userTest.getId())
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNotFound())
                 .andExpect(jsonPath("message").value(errorMessage));
@@ -84,7 +96,7 @@ public class UserControllerTest {
 
         Mockito.when(userService.getUserByName(userTest.getName())).thenReturn(userTest);
 
-        mockMvc.perform(get("/user/" + userTest.getName() + "/get-by-name")
+        mockMvc.perform(get("/user/{name}/get-by-name", userTest.getName())
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("id").value(userTest.getId()))
@@ -101,7 +113,7 @@ public class UserControllerTest {
         Mockito.doThrow(new NoSuchElementException(errorMessage))
                 .when(userService).getUserByName(ArgumentMatchers.any());
 
-        mockMvc.perform(get("/user/" + userTest.getName() + "/get-by-name")
+        mockMvc.perform(get("/user/{name}/get-by-name", userTest.getName())
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNotFound())
                 .andExpect(jsonPath("message").value(errorMessage));
@@ -198,7 +210,7 @@ public class UserControllerTest {
         Mockito.doThrow(new NoSuchElementException(errorMessage))
                 .when(userService).deleteUserById(ArgumentMatchers.any());
 
-        mockMvc.perform(delete("/user/" + userTest.getId() + "/delete")
+        mockMvc.perform(delete("/user/{id}/delete", userTest.getId())
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNotFound())
                 .andExpect(jsonPath("message").value(errorMessage));

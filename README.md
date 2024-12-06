@@ -18,6 +18,7 @@
 - src/test/java/../repositories - тесты DAO репозиториев.
 - src/test/java/../services - тесты сервисов.
 - src/test/java/../controllers - тесты контроллеров.
+- src/test/java/../integration - тесты интеграционные.
 
 Дополнительно:
 - По платёжному сервису добавлено документирование

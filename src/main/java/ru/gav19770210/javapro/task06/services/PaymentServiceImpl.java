@@ -8,6 +8,7 @@ import ru.gav19770210.javapro.task06.dto.PaymentRequest;
 import ru.gav19770210.javapro.task06.dto.PaymentResponse;
 
 import java.math.BigDecimal;
+import java.util.Arrays;
 import java.util.List;
 
 @Service
@@ -36,9 +37,10 @@ public class PaymentServiceImpl implements PaymentService {
                 .get()
                 .uri(url)
                 .retrieve()
-                .body(List.class);
+                .body(ProductEntity[].class);
 
-        return response;
+        assert response != null;
+        return Arrays.stream(response).toList();
     }
 
     @Override

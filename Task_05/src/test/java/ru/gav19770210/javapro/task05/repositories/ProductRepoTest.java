@@ -23,7 +23,6 @@ public class ProductRepoTest {
 
     @BeforeEach
     public void beforeEach() {
-        // Initialize test data before each test method
         userTest = new UserEntity();
         userTest.setName("Test_0123456789");
         var userCreate = userRepo.save(userTest);
@@ -37,7 +36,6 @@ public class ProductRepoTest {
 
     @AfterEach
     public void afterEach() {
-        // Release test data after each test method
         productRepo.deleteAll();
         productTest = null;
 

@@ -16,15 +16,13 @@ public class UserRepoTest {
     private UserEntity userTest;
 
     @BeforeEach
-    public void setUp() {
-        // Initialize test data before each test method
+    public void beforeEach() {
         userTest = new UserEntity();
         userTest.setName("Test_0123456789");
     }
 
     @AfterEach
-    public void tearDown() {
-        // Release test data after each test method
+    public void afterEach() {
         userRepo.deleteAll();
         userTest = null;
     }
