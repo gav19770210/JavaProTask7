@@ -30,11 +30,11 @@ public class PaymentServiceTest {
     private final String productGetByUserUri;
     private final String productUpdateUri;
     @Autowired
-    public PaymentService paymentService;
+    PaymentService paymentService;
     @Autowired
-    public ObjectMapper objectMapper;
+    ObjectMapper objectMapper;
     @Autowired
-    public RestTemplate restTemplate;
+    RestTemplate restTemplate;
     private ProductEntity productTest;
     private MockRestServiceServer mockRestServiceServer;
 
