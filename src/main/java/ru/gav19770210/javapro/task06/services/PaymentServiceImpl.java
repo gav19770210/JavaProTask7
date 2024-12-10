@@ -1,6 +1,5 @@
 package ru.gav19770210.javapro.task06.services;
 
-import lombok.Getter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -16,14 +15,10 @@ import java.util.List;
 @Service
 public class PaymentServiceImpl implements PaymentService {
     public static String msgPaymentSuccess = "Платёж выполнен успешно";
-    @Getter
-    public final String productBaseUrl;
-    @Getter
-    public final String productGetByIdUri;
-    @Getter
-    public final String productGetByUserUri;
-    @Getter
-    public final String productUpdateUri;
+    private final String productBaseUrl;
+    private final String productGetByIdUri;
+    private final String productGetByUserUri;
+    private final String productUpdateUri;
     private final RestTemplate restTemplate;
 
     @Autowired
