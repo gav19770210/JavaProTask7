@@ -2,6 +2,8 @@ package ru.gav19770210.javapro.task06;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.annotation.Bean;
+import org.springframework.web.client.RestTemplate;
 
 /*
 Перенесите ваш сервис продуктов в один проект с платежным ядром в виде отдельного модуля
@@ -19,5 +21,10 @@ Task_07:
 public class PaymentApp {
     public static void main(String[] args) {
         SpringApplication.run(PaymentApp.class, args);
+    }
+
+    @Bean
+    RestTemplate restTemplate() {
+        return new RestTemplate();
     }
 }

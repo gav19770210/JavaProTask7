@@ -24,7 +24,7 @@ import java.util.Arrays;
 public class UserIntegrationTest {
     private final ObjectMapper objectMapper = new ObjectMapper();
     @LocalServerPort
-    private Integer port;
+    Integer port;
     private UserEntity userTest;
 
     @BeforeEach

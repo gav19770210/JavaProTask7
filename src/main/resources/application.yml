@@ -21,7 +21,7 @@ server:
 # Remote Service Configuration
 service-url:
   product:
-    base-url: http://localhost:8081/product
-    get-by-user: /{user_id}/get-by-user
-    get-by-id: /{id}/get
-    update: /update
+    base-url: http://localhost:8081
+    get-by-user: /product/{user_id}/get-by-user
+    get-by-id: /product/{id}/get
+    update: /product/update

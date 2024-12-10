@@ -27,11 +27,11 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @WebMvcTest(UserController.class)
 public class UserControllerTest {
     private final ObjectMapper objectMapper = new ObjectMapper();
-    private UserEntity userTest;
     @Autowired
-    private MockMvc mockMvc;
+    MockMvc mockMvc;
     @MockBean
-    private UserService userService;
+    UserService userService;
+    private UserEntity userTest;
 
     @BeforeEach
     public void beforeEach() {

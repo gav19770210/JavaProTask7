@@ -15,7 +15,6 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import ru.gav19770210.javapro.task05.entities.ProductEntity;
 import ru.gav19770210.javapro.task05.entities.ProductType;
-import ru.gav19770210.javapro.task05.entities.UserEntity;
 import ru.gav19770210.javapro.task05.services.ProductService;
 import ru.gav19770210.javapro.task05.services.ProductServiceImpl;
 import ru.gav19770210.javapro.task05.services.UserServiceImpl;
@@ -31,23 +30,20 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @WebMvcTest(ProductController.class)
 public class ProductControllerTest {
     private final ObjectMapper objectMapper = new ObjectMapper();
-    private UserEntity userTest;
-    private ProductEntity productTest;
     @Autowired
-    private MockMvc mockMvc;
+    MockMvc mockMvc;
     @MockBean
-    private ProductService productService;
+    ProductService productService;
+    private ProductEntity productTest;
 
     @BeforeEach
     public void beforeEach() {
-        userTest = new UserEntity(1L, "Bob");
         productTest = new ProductEntity(1L, 1L, "40817810100000000001", BigDecimal.ZERO, ProductType.CARD);
     }
 
     @AfterEach
     public void afterEach() {
         productTest = null;
-        userTest = null;
     }
 
     @Test

@@ -1,8 +1,10 @@
 package ru.gav19770210.javapro.task06.services;
 
+import lombok.Getter;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestClient;
+import org.springframework.web.client.RestTemplate;
 import ru.gav19770210.javapro.task05.entities.ProductEntity;
 import ru.gav19770210.javapro.task06.dto.PaymentRequest;
 import ru.gav19770210.javapro.task06.dto.PaymentResponse;
@@ -13,31 +15,35 @@ import java.util.List;
 
 @Service
 public class PaymentServiceImpl implements PaymentService {
-    private final RestClient restClient;
-    private final String productBaseUrl;
-    private final String productGetByIdUri;
-    private final String productGetByUserUri;
-    private final String productUpdateUri;
+    public static String msgPaymentSuccess = "Платёж выполнен успешно";
+    @Getter
+    public final String productBaseUrl;
+    @Getter
+    public final String productGetByIdUri;
+    @Getter
+    public final String productGetByUserUri;
+    @Getter
+    public final String productUpdateUri;
+    private final RestTemplate restTemplate;
 
-    public PaymentServiceImpl(@Value("${service-url.product.base-url}") String productBaseUrl,
-                              @Value("${service-url.product.get-by-user}") String productGetByUserUri,
-                              @Value("${service-url.product.get-by-id}") String productGetByIdUri,
-                              @Value("${service-url.product.update}") String productUpdateUri) {
+    @Autowired
+    public PaymentServiceImpl(
+            RestTemplate restTemplate,
+            @Value("${service-url.product.base-url}") String productBaseUrl,
+            @Value("${service-url.product.get-by-user}") String productGetByUserUri,
+            @Value("${service-url.product.get-by-id}") String productGetByIdUri,
+            @Value("${service-url.product.update}") String productUpdateUri) {
+        this.restTemplate = restTemplate;
         this.productBaseUrl = productBaseUrl;
         this.productGetByIdUri = productGetByIdUri;
         this.productGetByUserUri = productGetByUserUri;
         this.productUpdateUri = productUpdateUri;
-        this.restClient = RestClient.builder().baseUrl(this.productBaseUrl).build();
     }
 
     @Override
     public List<ProductEntity> getUserProducts(Long userId) {
-        var url = productGetByUserUri.replace("{user_id}", userId.toString());
-        var response = restClient
-                .get()
-                .uri(url)
-                .retrieve()
-                .body(ProductEntity[].class);
+        var url = productBaseUrl + productGetByUserUri.replace("{user_id}", userId.toString());
+        var response = restTemplate.getForEntity(url, ProductEntity[].class).getBody();
 
         assert response != null;
         return Arrays.stream(response).toList();
@@ -45,12 +51,8 @@ public class PaymentServiceImpl implements PaymentService {
 
     @Override
     public ProductEntity getProductById(Long id) {
-        var url = productGetByIdUri.replace("{id}", id.toString());
-        var response = restClient
-                .get()
-                .uri(url)
-                .retrieve()
-                .toEntity(ProductEntity.class);
+        var url = productBaseUrl + productGetByIdUri.replace("{id}", id.toString());
+        var response = restTemplate.getForEntity(url, ProductEntity.class);
 
         return response.getBody();
     }
@@ -63,12 +65,8 @@ public class PaymentServiceImpl implements PaymentService {
     }
 
     private ProductEntity updateProduct(ProductEntity productEntity) {
-        var response = restClient
-                .post()
-                .uri(productUpdateUri)
-                .body(productEntity)
-                .retrieve()
-                .toEntity(ProductEntity.class);
+        var url = productBaseUrl + productUpdateUri;
+        var response = restTemplate.postForEntity(url, productEntity, ProductEntity.class);
 
         return response.getBody();
     }
@@ -80,7 +78,7 @@ public class PaymentServiceImpl implements PaymentService {
         product.setBalance(product.getBalance().subtract(paymentRequest.getSumma()));
         var productUpdate = updateProduct(product);
 
-        return new PaymentResponse("0", "Платёж выполнен успешно");
+        return new PaymentResponse(productUpdate.getId(), productUpdate.getBalance(), "0", msgPaymentSuccess);
     }
 
     @Override
@@ -89,6 +87,6 @@ public class PaymentServiceImpl implements PaymentService {
         product.setBalance(product.getBalance().add(paymentRequest.getSumma()));
         var productUpdate = updateProduct(product);
 
-        return new PaymentResponse("0", "Платёж выполнен успешно");
+        return new PaymentResponse(productUpdate.getId(), productUpdate.getBalance(), "0", msgPaymentSuccess);
     }
 }

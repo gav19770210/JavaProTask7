@@ -61,7 +61,7 @@ public class ProductRepoTest {
         var productEntityList = (List<ProductEntity>) productRepo.getAllByUserId(userTest.getId());
         var listCount = productEntityList.size();
         var productCreate = productRepo.save(productTest);
-        productEntityList = (List<ProductEntity>) productRepo.getAllByUserId(userTest.getId());
+        productEntityList = productRepo.getAllByUserId(userTest.getId());
 
         Assertions.assertNotNull(productCreate);
         Assertions.assertEquals(listCount + 1, productEntityList.size());
